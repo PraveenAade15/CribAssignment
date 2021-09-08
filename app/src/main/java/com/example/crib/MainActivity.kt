@@ -34,17 +34,25 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this@MainActivity, arrayOf(android.Manifest.permission.READ_SMS), 0)
 
         }
+        //launch coroutine in here
         GlobalScope.launch {
             submit.setOnClickListener {
                 arrayList.clear()
                 val PNumber = phoneNumber.text.toString()
                 val Days = NumberOfdays.text.toString()
+
+
+                //check for edittext is empty
+
                 if (PNumber.isEmpty() || Days.isEmpty()) {
                     arrayList.clear()
                     text.text = "Sorry,no messages found"
                 }
+                //phone number filter
                 else if (PNumber.isNotEmpty() && Days.isNotEmpty()) {
+
                     val uri = Uri.parse("content://sms/inbox")
+                   // val uridraft = Uri.parse("content://sms/draft")
                     val cursor = contentResolver.query(uri, null, null, null, null)
                     while (cursor?.moveToNext() == true) {
                         val number = cursor.getString(2)
@@ -57,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                             arrayList.add("$number \n $message \n $formatDate")
                         }
                     }
+
                     if (arrayList.size > 0){
                         text.text = "${arrayList.size.toString()} messages found"
 
